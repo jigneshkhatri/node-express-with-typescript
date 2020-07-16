@@ -1,8 +1,11 @@
-import postgres from '../configs/database.config';
+import DatabaseConfig from '../configs/DatabaseConfig';
 export default class UserService {
 
     private static obj: UserService;
-    private constructor() { }
+    private databaseConfig: DatabaseConfig;
+    private constructor() {
+        this.databaseConfig = DatabaseConfig.instance();
+    }
     public static instance() {
         if (!this.obj) {
             this.obj = new UserService();
@@ -10,10 +13,13 @@ export default class UserService {
         return this.obj;
     }
     public saveUsers() {
-        return postgres.dbHandler(async (client: any) => {
+        return this.databaseConfig.dbTransactionHandler(async (client: any) => {
             const res = client.query('INSERT INTO users VALUES (\'abcd\', \'ABCD\')');
             const res2 = client.query('INSERT INTO users VALUES (\'abcd2\', \'ABCD2\')');
             return Promise.all([res, res2]);
         });
+    }
+    public getUsers() {
+        return DatabaseConfig.getConnectionPool().query('SELECT * FROM users');
     }
 }
