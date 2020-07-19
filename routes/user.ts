@@ -27,7 +27,7 @@ const auth = Auth.instance();
 
 const login = (req: any, res: any) => {
   const user = req.body;
-  if (!user) { res.status(400); }
+  if (!user) { res.sendStatus(400); return; }
   userService.login(user.email, user.password).then((data) => {
     if (!data || data.rows.length < 1) { res.sendStatus(401); return; }
     res.status(200).json({ accessToken: auth.generateToken(user.email) })
