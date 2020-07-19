@@ -25,7 +25,7 @@ export default class DatabaseConfig {
         return this.poolObj;
     }
 
-    public async dbTransactionHandler(callback: any): Promise<any> {
+    public async dbTransactionHandler(callback: any) {
         const client = await DatabaseConfig.getConnectionPool().connect();
         try {
             await client.query('BEGIN');
